@@ -121,7 +121,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   toPlayer: 0
-  speed: 40
+  speed: 3
   bound: 24
   visibleRange: 12
 --- !u!54 &9107803521554408934

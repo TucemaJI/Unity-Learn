@@ -33,20 +33,29 @@ public class MoveFromToPlayer : BaseRules
 
         if (toPlayer) //for owner
         {
-            ObjectRb.AddRelativeForce(toPlayerPosition.normalized * speed);
+            RotateLookAt(toPlayerPosition);
+            ObjectRb.MovePosition(ObjectRb.position + toPlayerPosition.normalized * speed * Time.fixedDeltaTime);
         }
 
         //for chicken
         if (!toPlayer && toPlayerPosition.magnitude <= visibleRange)
         {
-            toPlayerPosition = -toPlayerPosition.normalized;
-            ObjectRb.AddRelativeForce(toPlayerPosition * speed);
+            RotateLookAt(-toPlayerPosition);
+            ObjectRb.MovePosition(ObjectRb.position + -toPlayerPosition.normalized * speed * Time.fixedDeltaTime);
         }
         if (!toPlayer && toPlayerPosition.magnitude > visibleRange)
         {
-            ObjectRb.AddRelativeForce((PlaneTransform.position - transform.position).normalized * speed);
+            RotateLookAt(PlaneTransform.position - transform.position);
+            ObjectRb.MovePosition(ObjectRb.position + (PlaneTransform.position - transform.position).normalized * speed * Time.fixedDeltaTime);
         }
 
         ConstrainPosition(bound);
+    }
+
+    private void RotateLookAt(Vector3 position)
+    {
+        var targetRotation = Quaternion.LookRotation(position.normalized);
+        targetRotation = Quaternion.RotateTowards(transform.rotation, targetRotation, 360f * Time.fixedDeltaTime);
+        ObjectRb.MoveRotation(targetRotation);
     }
 }

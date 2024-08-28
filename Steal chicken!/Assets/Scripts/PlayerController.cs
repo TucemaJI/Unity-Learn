@@ -1,4 +1,3 @@
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class PlayerController : BaseRules
@@ -28,23 +27,29 @@ public class PlayerController : BaseRules
         float verticalInput = Input.GetAxis("Vertical");
         float mouseMove = Input.GetAxis("Mouse X");
 
-        playerRb.rotation *= UnityEngine.Quaternion.Euler(0, mouseMove, 0);
-        playerRb.AddForce(playerRb.transform.TransformDirection(Vector3.right) * speed * horizontalInput);
-        playerRb.AddForce(playerRb.transform.TransformDirection(Vector3.forward) * speed * verticalInput);
+        playerRb.MoveRotation(playerRb.rotation * UnityEngine.Quaternion.Euler(0, mouseMove, 0));
+        
+        playerRb.MovePosition(playerRb.position + playerRb.transform.TransformDirection(Vector3.right) * speed * horizontalInput * Time.fixedDeltaTime);
+        playerRb.MovePosition(playerRb.position + playerRb.transform.TransformDirection(Vector3.forward) * speed * verticalInput * Time.fixedDeltaTime);
     }
-
-    private void OnCollisionEnter(Collision collision){
-        if(collision.gameObject.CompareTag("Chicken")){
+    
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.CompareTag("Chicken"))
+        {
             Destroy(collision.gameObject);
         }
-        if(collision.gameObject.CompareTag("Owner")){
+        if (collision.gameObject.CompareTag("Owner"))
+        {
             Debug.Log("Player has collided with Owner");
             Debug.Log("Game Over!");
         }
     }
 
-    private void OnTriggerEnter(Collider other){
-        if(other.gameObject.CompareTag("Powerup")){
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.CompareTag("Powerup"))
+        {
             Destroy(other.gameObject);
         }
     }
